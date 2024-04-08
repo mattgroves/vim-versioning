@@ -1,0 +1,18 @@
+function! IncrementVersion()
+    " Find the line containing the version number
+    let l:line = search('Version: \zs\d\+\.\d\+')
+    if l:line == 0
+        return
+    endif
+    " Get the version number
+    let l:versionString = matchstr(getline(l:line), '\d\+\.\d\+')
+    " Increment the version number
+    let l:version = str2float(l:versionString) + 0.01
+    " Format the new version number to have two decimal places
+    let l:newVersionString = printf('%.2f', l:version)
+    " Replace the old version number with the new one
+    call setline(l:line, substitute(getline(l:line), '\d\+\.\d\+', l:newVersionString, ''))
+endfunction
+
+" Run the IncrementVersion function before saving any file
+autocmd BufWritePre * call IncrementVersion()
